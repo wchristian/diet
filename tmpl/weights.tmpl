@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<TMPL_INCLUDE NAME="head_include.tmpl">
+<script type="text/javascript" src="js/jquery.jeditable.282mod.pack.js"></script>
+<script type="text/javascript" src="js/editajax.pack.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+$(document).ready(function(){
+<TMPL_IF NAME="valid">
+$("#messages").fadeIn().fadeTo(3000,1).fadeTo(2000,0);
+</TMPL_IF>
+$('a.calendar_icon').css('display', 'inline');
+Calendar.setup({ifFormat:"%Y/%m/%d",firstDay:1,showOthers:true,range:[<TMPL_VAR NAME="start_year">, <TMPL_VAR NAME="current_year">],step:1,inputField:"wdate",button:"wdate_trigger",cache:true,align:"TR"})
+$('#wval').focus();
+$('a.tips').cluetip({local:true});
+$('span.close').cluetip({local:true,arrows:true,showTitle:false,sticky:true,width:40,activation:'click',closeText: 'x'});
+$(".edit").editable("weights.pl", {
+   tooltip   : "Click to edit ...",
+   event     : "click",
+   indicator : "<img src='images/indicator.gif'>",
+   cssclass  : "editform",
+   submitdata: {action: "edit"},
+   callback  : weight_callback
+});
+});
+//--><!]]>
+</script>
+</head>
+<body>
+<div id="debug"> </div>
+<div id="topHelp" class="hide">Click on weight value to edit it inline. Press enter after making the modifications.<br /><br />Click on the date for deleting the entry.</div>
+<TMPL_INCLUDE NAME="header.tmpl">
+<div class="help"><a class="tips" href="#topHelp" rel="#topHelp" title="Edit / Delete">(help)</a></div>
+<div id="content">
+	<div id="messages">
+<TMPL_IF NAME="valid">
+	<TMPL_IF NAME="add">
+		<p class="ok"><img src="images/tick.png" alt="OK" /> Added new weight entry <b><TMPL_VAR NAME="entry_amount"> <TMPL_VAR NAME="entry_unit"></b> on <b><TMPL_VAR NAME="date"></b>.</p>
+	</TMPL_IF>
+	<TMPL_IF NAME="delete">
+		<p class="ok"><img src="images/tick.png" alt="OK" /> Weight entry of <TMPL_VAR NAME="weight"><TMPL_VAR NAME="weight_unit"> for <TMPL_VAR NAME="date"> has been deleted.</p>
+	</TMPL_IF>
+<TMPL_ELSE>
+		<p class="error"><img src="images/error.png" alt="Error" />The following errors have occurred:</p>
+		<ul class="error">
+		<TMPL_LOOP NAME="error_strings">
+			<li><TMPL_VAR NAME="error"></li>
+		</TMPL_LOOP>
+		</ul>
+</TMPL_IF>
+	</div>
+<div id="left">
+	<h1>Diet Tracker</h1>
+	<div class="summary">
+		<h2>Weight History</h2>
+		<form class="entry_form" method="post" action="weights.pl">
+		<fieldset>
+			<input type="hidden" name="action" value="add" />
+			<h3>New Weight Entry</h3>
+			<fieldset>
+				<div class="label"><label for="wval">Weight:</label></div>
+				<div class="input"><input type="text" id="wval" name="weight" size="5" /> <TMPL_VAR NAME="weight_in"></div>
+			</fieldset>
+			<fieldset>
+				<div class="label"><label for="wdate">Date:</label></div>
+				<div class="input"><input type="text" id="wdate" name="date" size="10" value="<TMPL_VAR NAME="current_date">" /><a id="wdate_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+			</fieldset>
+			<fieldset>
+				<div class="input"><input type="submit" value="Submit" /></div>
+			</fieldset>
+		</fieldset>
+		</form>
+	</div>
+	<div class="graphs">
+		<img src="view_weights_graph.pl?start_date=<TMPL_VAR NAME="start_date">&amp;stop_date=<TMPL_VAR NAME="stop_date">" alt="" />
+		<img src="view_lifting_graph.pl?start_date=<TMPL_VAR NAME="start_date">&amp;stop_date=<TMPL_VAR NAME="stop_date">" alt="" />
+	</div>
+</div>
+<div id="right">
+	<table class="weight">
+		<tr>
+			<th>Date</th>
+			<th>Weight</th>
+			<th class="split">Date</th>
+			<th>Weight</th>
+		</tr>
+		<TMPL_LOOP NAME="weight_loop">
+		<tr>
+			<td><span class="close" rel="#c<TMPL_VAR NAME="id">"><TMPL_VAR NAME="date1"></span></td>
+			<div id="c<TMPL_VAR NAME="id">" class="hide"><a href="weights.pl?action=delete&id=<TMPL_VAR NAME="id">">delete</a></div>
+			<td><TMPL_IF NAME="weight1"><span id="<TMPL_VAR NAME="id">" class="edit"><TMPL_VAR NAME="weight1"></span></TMPL_IF></td>
+			<td class="split column2"><span class="close" rel="#c<TMPL_VAR NAME="id2">"><TMPL_VAR NAME="date2"></span></td>
+			<div id="c<TMPL_VAR NAME="id2">" class="hide"><a href="weights.pl?action=delete&id=<TMPL_VAR NAME="id2">">delete</a></div>
+			<td class="column2"><TMPL_IF NAME="weight2"><div id="<TMPL_VAR NAME="id2">" class="edit"><TMPL_VAR NAME="weight2"></span></TMPL_IF></td>
+		</tr>
+		</TMPL_LOOP>
+	</table>
+</div>
+<TMPL_INCLUDE NAME="footer.tmpl">
+</div>
+</body>
+</html>

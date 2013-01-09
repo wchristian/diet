@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<TMPL_INCLUDE NAME="head_include.tmpl">
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+$(document).ready(function(){
+<TMPL_IF NAME="valid">
+$("#messages").fadeIn().fadeTo(3000,1).fadeTo(2000,0);
+</TMPL_IF>
+$("div.file_details").hide();
+$('a.toggle_button').toggle(function(){
+$(this).html("<img src=\"images/collapse.png\" alt=\"Collapse\" /> ");
+$('div.'+$(this).attr('id')).slideDown();
+},function(){$(this).html("<img src=\"images/expand.png\" alt=\"Expand\" /> ");
+$('div.'+$(this).attr('id')).slideUp();}).css('display','inline');
+});
+//--><!]]>
+</script>
+</head>
+<body>
+<TMPL_INCLUDE NAME="header.tmpl">
+<div id="content">
+<TMPL_IF NAME="valid">
+	<TMPL_IF NAME="edit">
+	<div id="messages">
+                <p class="ok"><img src="images/tick.png" alt="OK" /> Edited config file successfully </p>
+	</div>
+	</TMPL_IF>
+<TMPL_ELSE>
+	<div id="messages">
+		<p class="error"><img src="images/error.png" alt="Error" />The following errors have occurred:</p>
+		<ul class="error">
+		<TMPL_LOOP NAME="error_strings">
+			<li><TMPL_VAR NAME="error"></li>
+		</TMPL_LOOP>
+		</ul>
+	</div>
+</TMPL_IF>
+<div id="middle">
+	<h1>Diet Tracker Admin</h1>
+<p style="text-align:left"><a id="d1" href="admin.pl" class="toggle_button"> <img src="images/expand.png" alt="Expand" /> </a>Edit config file</p>
+<div class="file_details d1">
+<form name="configEdit" action="admin.pl" method="post">
+<textarea name="newconfig" rows="15" cols="80">
+<TMPL_VAR NAME="config_content">
+</textarea>
+<input type="hidden" name="edit" value="1" /><br />
+<input type="submit" value="Submit" />
+</form>
+</div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
+</div>
+</body>
+</html>

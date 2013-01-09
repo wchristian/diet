@@ -1,0 +1,59 @@
+# The config file for the Diet Tracker
+# License GPL
+
+#MySQL username
+mysqluser:username
+
+#MySQL password
+mysqlpasswd:password
+
+#MySQL database name
+database:dbname
+
+#MySQL database server (usually localhost)
+dbserver:localhost
+
+#MySQL database prefix
+dbprefix:dt_
+
+#Enable Autosuggest for Item Entry (0=disable, 1=enable)
+en_autosuggest:1
+
+#Number of days worth of intake to display per page.
+#The higher the number, the slower pages will load.
+days_per_page:20
+
+#When did you start your diet?
+#2007/01/01
+start_yr:2008
+start_month:11
+start_day:25
+
+#Number of vacation days when data was not entered
+#Used for Avg. calculation
+vacation:0
+
+#Number of days used for moving point avg. calculation
+moving_avg_pts:19
+
+#Weight Unit (uncomment choice and comment out other)
+#weight_in:Kg
+weight_in:Kg
+
+#Your ultimate target weight
+target_weight:80
+
+#max target intake for a day in KCal
+max_intake:1200
+
+#Your height in cm (for BMI calculation)
+height:165
+
+# Choose the color of the grap lines. Choices are:
+# white, lgray, gray, dgray, black, lblue, blue, dblue, gold,
+# lyellow, yellow, dyellow, lgreen, green, dgreen, lred, red, dred,
+# lpurple, purple, dpurple, lorange, orange, pink, dpink, marine,
+# cyan, lbrown, dbrown
+daily_clr:lblue
+avg_clr:lgreen
+w_avg_clr:lred

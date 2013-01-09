@@ -1,0 +1,212 @@
+body {
+	background-color: #FFF;
+	text-align: center;
+	font-family: 'Trebuchet ms', Verdana, 'News Gothic', Arial, sans-serif;
+	font-size: 0.8em;
+	margin: 0;
+}
+p {
+	text-align: center;
+}
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+img {
+	border: none;
+}
+h1 {
+	margin: 0 0 0.5ex 0;
+}
+h2 {
+	margin: 0 0 0.25ex 0;
+}
+
+/* Error Styles */
+.error {
+	color: #CC0000;
+	text-align: center;
+}
+p.error {
+	font-weight: bold;
+}
+ul.error {
+	text-align: left;
+}
+
+p.ok {
+	color: #008C00;
+}
+
+/* Page Layout */
+div#content {
+	width: 95%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+	padding: 0 1em 1em 1em;
+}
+div#messages {
+	/*border: 1px solid #ddd;*/
+	margin-bottom: 10px;
+	height:40px;
+	margin-top:-40px; 
+	text-align: center;
+}
+
+div#messages p {
+	display:inline;
+	margin-top:90px;
+	text-align: center;
+}
+
+div#messages img {
+	vertical-align: bottom;
+}
+
+div#left {
+	float: left;
+	width: 429px;
+	text-align: center;
+}
+div#right {
+	float: right;
+	width: 475px;
+}
+
+div#middle h1{
+	text-align:center;
+}
+/* Header */
+#header {
+	height: 65px;
+}
+#banner {
+	background-color: #AED7A8;
+	text-decoration: none;
+	padding: 0px;
+	margin-bottom: 0px;
+	width: 100%;
+	height: 25px;
+}
+#logotitle {
+	float:left;
+	position:relative;
+	padding:5px 5px 5px 20px;
+	text-align:left;
+}
+#menu {
+	padding:5px 20px 5px 5px;
+	text-align:right;
+}
+
+/* Footer */
+div#footer {
+	padding: 1ex;
+	font-size: 0.8em;
+	clear: both;
+	text-align: center;
+}
+
+/* Main Page */
+.summary {
+	margin: 0.5ex;
+	padding: 0.5ex;
+	text-align: left;
+}
+.graphs img {
+	margin: 0.5ex;
+	padding: 0.5ex;
+	/*border: 1px solid #ddd;*/
+}
+.entry_form fieldset {
+	border: 1px solid #ddd;
+	margin: 0 0 1ex 0;
+	background-color: #fff;
+	color: black;
+	padding: 0.5ex 1ex;
+}
+.entry_form fieldset h3 {
+	margin: 0.5ex 0;
+}
+.entry_form fieldset fieldset {
+	border: none;
+	margin: 1ex;
+	padding: 0;
+}
+.entry_form div.label {
+	float: left;
+	width: 27%;
+	text-align: right;
+	font-weight:bold;
+	margin: 0;
+	padding-top: 0.5ex;
+}
+.entry_form div.input {
+	margin: 0 0 0 28%;
+}
+.calendar_icon {
+	margin-left: 0.5ex;
+	display: none;
+}
+
+/* Data Tables */
+table.weight, table.intake, table.summary_table {
+	width: 100%;
+	border: none;
+	border-collapse: collapse;
+}
+table.weight, table.intake {
+	text-align: center;
+}
+table.weight th, table.intake th {
+	background-color: #444;
+	color: #cccc99;
+}
+table.intake .date {
+	width: 110px;
+}
+table.intake .kcal {
+	width: 160px;
+}
+table.weight .split {
+	border-left: 1px solid black;
+}
+table.weight td.column2 {
+	background-color: #eeeeee;
+}
+a.toggle_button {
+	display: none;
+}
+div.item_details {
+	padding-left: 40px;
+	padding-right: 1ex;
+	text-align: left;
+}
+div.item_details ul {
+	list-style: none;
+	white-space: nowrap;
+	margin: 0;
+	padding: 0;
+}
+
+div.item_details li {
+	padding: 0.3ex;
+}
+.editform {
+	display:inline;
+}
+.editform input {
+	background: #CDEB8B;
+	border: 1px solid #000000;
+	display:inline;
+}
+
+.hide{
+display:none;
+}
+.help{
+ position:absolute;right:5px;top:50px
+}

@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<TMPL_INCLUDE NAME="head_include.tmpl">
+<TMPL_IF NAME="en_autosuggest">
+<link rel="stylesheet" href="autosuggest/autosuggest_inquisitor.pack.css" type="text/css" media="screen" charset="utf-8" />
+<script type="text/javascript" src="autosuggest/bsn.AutoSuggest_2.1.3.js" charset="utf-8"></script>
+</TMPL_IF>
+<script type="text/javascript" src="js/jquery.jeditable.282mod.pack.js"></script>
+<script type="text/javascript" src="js/editajax.pack.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+function confirmDelete(){var agree=confirm("Are you sure you wish to delete this entry?");if (agree){return true;}else{return false;}}
+$(document).ready(function(){
+
+<TMPL_IF NAME="valid">
+$("#messages").fadeIn().fadeTo(3000,1).fadeTo(1000,0);
+</TMPL_IF>
+
+$('a.calendar_icon').css('display', 'inline');
+Calendar.setup({ifFormat:"%Y/%m/%d",firstDay:1,showOthers:true,range:[<TMPL_VAR NAME="start_year">, <TMPL_VAR NAME="current_year">],step:1,inputField:"fdate",button:"fdate_trigger",cache:true,align:"TR"})
+
+<TMPL_IF NAME="en_autosuggest">
+var options = {script:"autocomplete.pl?type=item&",varname:"item",timeout:4000,shownoresults:false,json:true};
+var item_entry = new bsn.AutoSuggest('fitem',options);
+
+var options6 = {script:function(input){return "autocomplete.pl?type=amount&item="+encodeURIComponent(document.getElementById('fitem').value)+"&amount="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var amount_entry = new bsn.AutoSuggest('famount',options6);
+
+var options2 = {script:function(input){return "autocomplete.pl?type=kcal&item="+encodeURIComponent(document.getElementById('fitem').value)+"&kcal="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var kcal_entry = new bsn.AutoSuggest('fkcal',options2);
+
+var options3 = {script:function(input){return "autocomplete.pl?type=prot&item="+encodeURIComponent(document.getElementById('fitem').value)+"&prot="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var prot_entry = new bsn.AutoSuggest('fprot',options3);
+
+var options4 = {script:function(input){return "autocomplete.pl?type=carb&item="+encodeURIComponent(document.getElementById('fitem').value)+"&carb="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var carb_entry = new bsn.AutoSuggest('fcarb',options4);
+
+var options5 = {script:function(input){return "autocomplete.pl?type=fat&item="+encodeURIComponent(document.getElementById('fitem').value)+"&fat="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var fat_entry = new bsn.AutoSuggest('ffat',options5);
+</TMPL_IF>
+
+$('#fitem').focus();
+
+$("div.item_details").hide();
+
+$('a.toggle_button').toggle(
+function(){
+   $(this).html("<img src=\"images/collapse.png\" alt=\"Collapse\" /> ");
+   $('div.'+$(this).attr('id')).slideDown();
+},
+function(){
+   $(this).html("<img src=\"images/expand.png\" alt=\"Expand\" /> ");
+   $('div.'+$(this).attr('id')).slideUp();
+}
+).css('display','inline');
+
+$('a.tips').cluetip({local:true});
+
+$(".edit").editable("intake.pl", {
+   tooltip   : "Click to edit ...",
+   event     : "click",
+   indicator : "<img src='images/indicator.gif'>",
+   cssclass  : "editform",
+   submitdata: {action: "edit"},
+   callback  : intake_callback
+});
+
+});
+//--><!]]>
+</script>
+</head>
+<body>
+<div id="debug"> </div>
+<div id="topHelp" class="hide">Click on intake item name or the calorie value to edit them inline. Press enter after making the modifications.</div>
+<TMPL_INCLUDE NAME="header.tmpl">
+<div class="help"><a class="tips" href="#topHelp" rel="#topHelp" title="Editing">(help)</a></div>
+<div id="content">
+	<div id="messages">
+<TMPL_IF NAME="valid">
+	<TMPL_IF NAME="add">
+	<p class="ok">
+	<img src="images/tick.png" alt="OK" />
+		<b> Added</b> food intake entry: <b><TMPL_VAR NAME="item_type"></b> worth <b><TMPL_VAR NAME="item_amount"> KCal</b> on <b><TMPL_VAR NAME="date"></b>.
+	</p>
+	</TMPL_IF>
+	<TMPL_IF NAME="edit">
+	<p class="ok">
+	<img src="images/tick.png" alt="OK" />
+		<b>Edited</b> food intake entry: <b><TMPL_VAR NAME="item_type"></b> worth <b><TMPL_VAR NAME="item_amount"> KCal</b> on <b><TMPL_VAR NAME="date"></b>.
+	</p>
+	</TMPL_IF>
+	<TMPL_IF NAME="delete">
+	<p class="ok">
+	<img src="images/tick.png" alt="OK" />
+		<b> Deleted</b> food intake entry: <b><TMPL_VAR NAME="item_type"></b> worth <b><TMPL_VAR NAME="item_amount"> KCal</b> from <b><TMPL_VAR NAME="date"></b>.
+	</p>
+	</TMPL_IF>
+<TMPL_ELSE>
+	<p class="error"><img src="images/error.png" alt="Error" /> The following errors have occurred:</p>
+	<ul class="error">
+	<TMPL_LOOP NAME="error_strings">
+		<li><TMPL_VAR NAME="error"></li>
+	</TMPL_LOOP>
+	</ul>
+</TMPL_IF>
+	</div>
+<div id="left">
+	<h1>Diet Tracker</h1> 
+	<div class="summary">
+		<h2>Calorie Intake History</h2>
+		<form class="entry_form" method="post" action="intake.pl">
+		<fieldset>
+			<input type="hidden" name="form_submit" value="1" />
+			<TMPL_IF NAME="edit_form">
+			<input type="hidden" name="action" value="edit" />
+			<input type="hidden" name="id" value="<TMPL_VAR NAME="form_id">" />
+			<h3>Edit Intake Entry</h3>
+			<TMPL_ELSE>
+			<input type="hidden" name="action" value="add" />
+			<h3>New Intake Entry</h3>
+			</TMPL_IF>
+			<fieldset>
+				<div class="label"><label for="fitem">Item:</label></div>
+				<div class="input"><input type="text" id="fitem" name="item" size="20" maxlength="50" value="<TMPL_VAR NAME="form_item">" /></div>
+			</fieldset>
+			<fieldset>
+				<div class="label"><label for="famount">Amount:</label></div>
+				<div class="input"><input type="text" id="famount" name="amount" size="5" value="<TMPL_VAR NAME="form_amount">" /></div>
+			</fieldset>
+			<fieldset>
+				<div class="label"><label for="fkcal">KCal:</label></div>
+				<div class="input"><input type="text" id="fkcal" name="kcal" size="5" value="<TMPL_VAR NAME="form_kcal">" /></div>
+			</fieldset>
+			<fieldset>
+				<div class="label"><label for="fprot">Protein:</label></div>
+				<div class="input"><input type="text" id="fprot" name="prot" size="5" value="<TMPL_VAR NAME="form_prot">" /></div>
+			</fieldset>
+			<fieldset>
+				<div class="label"><label for="fcarb">Carbs:</label></div>
+				<div class="input"><input type="text" id="fcarb" name="carb" size="5" value="<TMPL_VAR NAME="form_carb">" /></div>
+			</fieldset>
+			<fieldset>
+				<div class="label"><label for="ffat">Fat:</label></div>
+				<div class="input"><input type="text" id="ffat" name="fat" size="5" value="<TMPL_VAR NAME="form_fat">" /></div>
+			</fieldset>
+			<fieldset>
+				<div class="label"><label for="fdate">Date:</label></div>
+				<div class="input"><input type="text" id="fdate" name="date" size="10" value="<TMPL_VAR NAME="form_date">" /><a id="fdate_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+			</fieldset>
+			<fieldset>
+				<div class="input"><input type="submit" value="Submit" /></div>
+			</fieldset>
+		</fieldset>
+		</form>
+	</div>
+	<div class="graphs">
+		<img src="view_intake_graph.pl?start_date=<TMPL_VAR NAME="start_date">&amp;stop_date=<TMPL_VAR NAME="stop_date">" alt="Intake Graph" />
+		<img src="view_intake_split_graph.pl?start_date=<TMPL_VAR NAME="start_date">&amp;stop_date=<TMPL_VAR NAME="stop_date">" alt="Intake Split Graph" />
+	</div>
+</div>
+<div id="right">
+	<table class="intake">
+		<tr>
+			<th class="date">Date</th>
+			<th class="kcal">Total Intake</th>
+			<th></th>
+		</tr>
+		<tr>
+			<th class="date"></th>
+			<th class="kcal">kCal - Prot - Carb - Fat</th>
+			<th></th>
+		</tr>
+		<TMPL_LOOP NAME="outer_loop">
+		<tr>
+			<td class="date"><a id="item_<TMPL_VAR NAME="item_details_id">" class="toggle_button" href="view_intake.pl"><img src="images/expand.png" alt="Expand" /> </a><TMPL_VAR NAME="date_sum"></td>
+			<td class="kcal kcal<TMPL_VAR NAME="item_details_id">"><TMPL_VAR NAME="sum"> - <TMPL_VAR NAME="sum_p"> - <TMPL_VAR NAME="sum_c"> - <TMPL_VAR NAME="sum_f"></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<div class="item_<TMPL_VAR NAME="item_details_id"> item_details">
+					<ul>
+						<TMPL_LOOP NAME="inner_loop">
+						<li>
+							<a onclick="return confirmDelete();" href="intake.pl?action=delete&amp;id=<TMPL_VAR NAME="id">">
+								<img style="padding-right:5px;" src="images/delete.png" alt="Delete this entry" />
+							</a>
+							<span title="Click to edit" id="<TMPL_VAR NAME="id">f" class="edit"><TMPL_VAR NAME="item"></span>
+							 - [ 
+							<span id="<TMPL_VAR NAME="id">m" class="edit <TMPL_VAR NAME="date">"><TMPL_VAR NAME="amount"></span>
+							 - 
+							<span id="<TMPL_VAR NAME="id">c" class="edit <TMPL_VAR NAME="date">"><TMPL_VAR NAME="calorie"></span>
+							 ] - [ 
+							<span id="<TMPL_VAR NAME="id">p" class="edit <TMPL_VAR NAME="date">"><TMPL_VAR NAME="protein"></span>
+							 - 
+							<span id="<TMPL_VAR NAME="id">a" class="edit <TMPL_VAR NAME="date">"><TMPL_VAR NAME="carb"></span>
+							 - 
+							<span id="<TMPL_VAR NAME="id">t" class="edit <TMPL_VAR NAME="date">"><TMPL_VAR NAME="fat"></span>
+							 ] - [ 
+							<span id="<TMPL_VAR NAME="id">p" class="edit <TMPL_VAR NAME="date">"><TMPL_VAR NAME="cal_rough"></span>
+							 - 
+							<span id="<TMPL_VAR NAME="id">a" class="edit <TMPL_VAR NAME="date">"><TMPL_VAR NAME="cal_macro"></span>
+							 ]
+						</li>
+						</TMPL_LOOP>
+					</ul>
+				</div>
+			</td>
+		</tr>
+		</TMPL_LOOP>
+	</table>
+	<p><TMPL_IF NAME="prev_page_num"><a href="intake.pl?start_date=<TMPL_VAR NAME="start_date">&amp;stop_date=<TMPL_VAR NAME="stop_date">&amp;page=<TMPL_VAR NAME="prev_page_num">">&lt;&lt;Prev</a> | </TMPL_IF><TMPL_IF NAME="next_page_num"><a href="intake.pl?start_date=<TMPL_VAR NAME="start_date">&amp;stop_date=<TMPL_VAR NAME="stop_date">&amp;page=<TMPL_VAR NAME="next_page_num">">Next&gt;&gt;</a></TMPL_IF></p>
+</div>
+<TMPL_INCLUDE NAME="footer.tmpl">
+</div>
+</body>
+</html>

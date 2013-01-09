@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<TMPL_INCLUDE NAME="head_include.tmpl">
+<TMPL_IF NAME="en_autosuggest">
+<link rel="stylesheet" href="autosuggest/autosuggest_inquisitor.pack.css" type="text/css" media="screen" charset="utf-8" />
+<script type="text/javascript" src="autosuggest/bsn.AutoSuggest_2.1.3.js" charset="utf-8"></script>
+</TMPL_IF>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+$(document).ready(function(){
+$('a.calendar_icon').css('display', 'inline');
+Calendar.setup({ifFormat:"%Y/%m/%d",firstDay:1,showOthers:true,range:[<TMPL_VAR NAME="start_year">, <TMPL_VAR NAME="current_year">],step:1,inputField:"fdate",button:"fdate_trigger",cache:true,align:"TR"})
+Calendar.setup({ifFormat:"%Y/%m/%d",firstDay:1,showOthers:true,range:[<TMPL_VAR NAME="start_year">, <TMPL_VAR NAME="current_year">],step:1,inputField:"wdate",button:"wdate_trigger",cache:true,align:"TR"})
+Calendar.setup({ifFormat:"%Y/%m/%d",firstDay:1,showOthers:true,range:[<TMPL_VAR NAME="start_year">, <TMPL_VAR NAME="current_year">],step:1,inputField:"ldate",button:"ldate_trigger",cache:true,align:"TR"})
+Calendar.setup({ifFormat:"%Y/%m/%d",firstDay:1,showOthers:true,range:[<TMPL_VAR NAME="start_year">, <TMPL_VAR NAME="current_year">],step:1,inputField:"fstart_date",button:"fstart_date_trigger",cache:true,align:"TR"})
+Calendar.setup({ifFormat:"%Y/%m/%d",firstDay:1,showOthers:true,range:[<TMPL_VAR NAME="start_year">, <TMPL_VAR NAME="current_year">],step:1,inputField:"fstop_date",button:"fstop_date_trigger",cache:true,align:"TR"})
+Calendar.setup({ifFormat:"%Y/%m/%d",firstDay:1,showOthers:true,range:[<TMPL_VAR NAME="start_year">, <TMPL_VAR NAME="current_year">],step:1,inputField:"wstart_date",button:"wstart_date_trigger",cache:true,align:"TR"})
+Calendar.setup({ifFormat:"%Y/%m/%d",firstDay:1,showOthers:true,range:[<TMPL_VAR NAME="start_year">, <TMPL_VAR NAME="current_year">],step:1,inputField:"wstop_date",button:"wstop_date_trigger",cache:true,align:"TR"})
+<TMPL_IF NAME="en_autosuggest">
+var options = {script:"autocomplete.pl?type=item&",varname:"item",timeout:4000,shownoresults:false,json:true};
+var item_entry = new bsn.AutoSuggest('fitem',options);
+
+var options6 = {script:function(input){return "autocomplete.pl?type=amount&item="+encodeURIComponent(document.getElementById('fitem').value)+"&amount="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var amount_entry = new bsn.AutoSuggest('famount',options6);
+
+var options2 = {script:function(input){return "autocomplete.pl?type=kcal&item="+encodeURIComponent(document.getElementById('fitem').value)+"&kcal="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var kcal_entry = new bsn.AutoSuggest('fkcal',options2);
+
+var options3 = {script:function(input){return "autocomplete.pl?type=prot&item="+encodeURIComponent(document.getElementById('fitem').value)+"&prot="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var prot_entry = new bsn.AutoSuggest('fprot',options3);
+
+var options4 = {script:function(input){return "autocomplete.pl?type=carb&item="+encodeURIComponent(document.getElementById('fitem').value)+"&carb="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var carb_entry = new bsn.AutoSuggest('fcarb',options4);
+
+var options5 = {script:function(input){return "autocomplete.pl?type=fat&item="+encodeURIComponent(document.getElementById('fitem').value)+"&fat="+input;},minchars:0,timeout:4000,shownoresults:false,onfocus:true,fillsingle:true,json:true};
+var fat_entry = new bsn.AutoSuggest('ffat',options5);
+
+</TMPL_IF>
+$('#fitem').focus();
+$('span.today').cluetip({local : true, width : '200px'});
+$('a.tips').cluetip({local : true, width : '280px'});
+});
+//--><!]]>
+</script>
+</head>
+<body>
+<div id="topHelp" class="hide">Hover mouse on today's intake total to see the details.</div>
+<div id="todayIntake" class="hide">
+<TMPL_LOOP NAME="today_in_loop">
+<TMPL_VAR NAME="item"> - <TMPL_VAR NAME="calorie"><br />
+</TMPL_LOOP>
+</div>
+<TMPL_INCLUDE NAME="header.tmpl">
+<div class="help"><a class="tips" href="#topHelp" rel="#topHelp" title="Help">(help)</a></div>
+<div id="content">
+<div id="left">
+	<h1>Weight Tracker</h1>
+	<div class="summary">
+		<table class="summary_table">
+			<tr><td>Total intake for today:</td><td><span id="todayIntake" class="today" rel="#todayIntake" title="Today's Intake Details"><b><TMPL_VAR NAME="today_intake"> KCal</b></span>, remaining <TMPL_VAR NAME="intake_diff"> KCal</td></tr>
+			<!--<tr><td>Including today, on for:</td><td><b><TMPL_VAR NAME="days"> days</b></td></tr>-->
+			<tr><td>Average intake:</td><td><b><TMPL_VAR NAME="avg_intake"> KCal</b></td></tr>
+			<tr><td>BMI<TMPL_IF NAME="weight_date"> (Recorded <TMPL_VAR NAME="weight_date">)</TMPL_IF>:</td><td><b><TMPL_VAR NAME="bmi"></b><TMPL_IF NAME="bmi_cat">, <TMPL_VAR NAME="bmi_cat"></TMPL_IF></td></tr>
+			<tr><td>Weight Change:</td><td><img src="images/<TMPL_VAR NAME="weight_movement">" /><b><TMPL_VAR NAME="weight_diff"> <TMPL_VAR NAME="weight_in"></b>, remaining <TMPL_VAR NAME="weight_remaining"> <TMPL_VAR NAME="weight_in"></td></tr>
+		</table>
+	</div>
+	<div class="graphs">
+		<img src="view_weights_graph.pl" alt="" />
+		<img src="view_intake_graph.pl" alt="" />
+		<img src="view_intake_split_graph.pl" alt="" />
+		<img src="view_lifting_graph.pl" alt="" />
+	</div>
+</div>
+
+<div id="right">
+<form class="entry_form" method="post" action="intake.pl">
+<fieldset>
+	<input type="hidden" name="action" value="add" />
+	<h3>New Intake Entry</h3>
+	<fieldset>
+		<div class="label"><label for="fitem">Item:</label></div>
+		<div class="input"><input type="text" id="fitem" name="item" size="20" maxlength="50" /></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="famount">Amount:</label></div>
+		<div class="input"><input type="text" id="famount" name="amount" size="5" /></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="fkcal">KCal:</label></div>
+		<div class="input"><input type="text" id="fkcal" name="kcal" size="5" /></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="fprot">Protein:</label></div>
+		<div class="input"><input type="text" id="fprot" name="prot" size="5" /></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="fcarb">Carbs:</label></div>
+		<div class="input"><input type="text" id="fcarb" name="carb" size="5" /></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="ffat">Fat:</label></div>
+		<div class="input"><input type="text" id="ffat" name="fat" size="5" /></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="fdate">Date:</label></div>
+		<div class="input"><input type="text" id="fdate" name="date" size="10" value="<TMPL_VAR NAME="current_date">" /><a id="fdate_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+	</fieldset>
+	<fieldset>
+		<div class="input"><input type="submit" value="Submit" /></div>
+	</fieldset>
+</fieldset>
+</form>
+
+<form class="entry_form" method="post" action="weights.pl">
+<fieldset>
+	<input type="hidden" name="action" value="add" />
+	<h3>New Weight Entry</h3>
+	<fieldset>
+		<div class="label"><label for="wval">Weight:</label></div>
+		<div class="input"><input type="text" id="wval" name="weight" size="5" /> <TMPL_VAR NAME="weight_in"></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="wdate">Date:</label></div>
+		<div class="input"><input type="text" id="wdate" name="date" size="10" value="<TMPL_VAR NAME="current_date">" /><a id="wdate_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+	</fieldset>
+	<fieldset>
+		<div class="input"><input type="submit" value="Submit" /></div>
+	</fieldset>
+</fieldset>
+</form>
+
+<form class="entry_form" method="post" action="lifting.pl">
+<fieldset>
+	<input type="hidden" name="action" value="add" />
+	<h3>New Lifting Entry</h3>
+	<fieldset>
+		<div class="label"><label for="lval">Weight:</label></div>
+		<div class="input"><input type="text" id="lval" name="weight" size="5" /> <TMPL_VAR NAME="weight_in"></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="ltype">Date:</label></div>
+		<div class="input">
+			<select id="ltype" name="type">
+				<option value="squat">Squat</option>
+				<option value="press">Press</option>
+				<option value="benchpress">Bench Press</option>
+				<option value="deadlift">Deadlift</option>
+				<option value="powerclean">Power Clean</option>
+				<option value="dbrows">Dumbbell Rows</option>
+				<option value="dbpress">Dumbbell Press</option>
+			</select>
+		</div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="ldate">Date:</label></div>
+		<div class="input">
+			<input type="text" id="ldate" name="date" size="10" value="<TMPL_VAR NAME="current_date">" />
+			<a id="ldate_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a>
+		</div>
+	</fieldset>
+	<fieldset>
+		<div class="input"><input type="submit" value="Submit" /></div>
+	</fieldset>
+</fieldset>
+</form>
+
+<form class="entry_form" method="post" action="weights.pl">
+<fieldset>
+	<input type="hidden" name="action" value="view" />
+	<h3>View Weight History</h3>
+	<fieldset>
+		<div class="label"><label for="wstart_date">Start Date:</label></div>
+		<div class="input"><input type="text" id="wstart_date" name="start_date" size="10" value="<TMPL_VAR NAME="start_date">" /><a id="wstart_date_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="wstop_date">Stop Date:</label></div>
+		<div class="input"><input type="text" id="wstop_date" name="stop_date" size="10" value="<TMPL_VAR NAME="current_date">" /><a id="wstop_date_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+	</fieldset>
+	<fieldset>
+		<div class="input"><input type="submit" value="View" /></div>
+	</fieldset>
+</fieldset>
+</form>
+
+<form class="entry_form" method="post" action="intake.pl">
+<fieldset>
+	<input type="hidden" name="action" value="view" />
+	<h3>View Calorie Intake History</h3>
+	<fieldset>
+		<div class="label"><label for="fstart_date">Start Date:</label></div>
+		<div class="input"><input type="text" id="fstart_date" name="start_date" size="10" value="<TMPL_VAR NAME="start_date">" /><a id="fstart_date_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="fstop_date">Stop Date:</label></div>
+		<div class="input"><input type="text" id="fstop_date" name="stop_date" size="10" value="<TMPL_VAR NAME="current_date">" /><a id="fstop_date_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+	</fieldset>
+	<fieldset>
+		<div class="input"><input type="submit" value="View" /></div>
+	</fieldset>
+</fieldset>
+</form>
+
+<form class="entry_form" method="post" action="summary.pl">
+<fieldset>
+	<input type="hidden" name="action" value="view" />
+	<h3>View Summary</h3>
+	<fieldset>
+		<div class="label"><label for="fstart_date">Start Date:</label></div>
+		<div class="input"><input type="text" id="fstart_date" name="start_date" size="10" value="<TMPL_VAR NAME="start_date">" /><a id="fstart_date_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+	</fieldset>
+	<fieldset>
+		<div class="label"><label for="fstop_date">Stop Date:</label></div>
+		<div class="input"><input type="text" id="fstop_date" name="stop_date" size="10" value="<TMPL_VAR NAME="current_date">" /><a id="fstop_date_trigger" class="calendar_icon" href="index.pl"><img src="images/calendar.png" alt="Show Calendar" /></a></div>
+	</fieldset>
+	<fieldset>
+		<div class="input"><input type="submit" value="View" /></div>
+	</fieldset>
+</fieldset>
+</form>
+</div>
+<TMPL_INCLUDE NAME="footer.tmpl">
+</div>
+</body>
+</html>
